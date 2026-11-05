@@ -99,14 +99,14 @@ class _SupportSheetState extends State<SupportSheet> {
    await widget.controller.simulate(widget.item.id,amount,
     'demo-'+DateTime.now().microsecondsSinceEpoch.toString());
    if(!mounted)return;
-   Navigator.pop(context);
-   showDialog(context:context,builder:(d)=>AlertDialog(
+   await showDialog(context:context,builder:(d)=>AlertDialog(
     title:const Text('Simulazione completata'),
     content:Text('Hai simulato un sostegno di '+euro(amount)+
      ' con una commissione di servizio del 5% ('+euro(serviceFeeCents(amount))+'). '+
      'Totale ipotetico: '+euro(totalCents(amount))+
      '. Nessun denaro è stato addebitato, trasferito o raccolto.'),
     actions:[FilledButton(onPressed:()=>Navigator.pop(d),child:const Text('Perfetto'))]));
+   if(mounted)Navigator.pop(context);
   }catch(e){if(mounted)showFailure(context,e);}finally{if(mounted)setState(()=>sending=false);}
  }
  @override Widget build(BuildContext context)=>Padding(
