@@ -1,0 +1,15 @@
+.dart_tool/
+.pub/
+.pub-cache/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+.idea/
+.DS_Store
+**/local.properties
+**/Generated.xcconfig
+**/flutter_export_environment.sh
+android/key.properties
+*.jks
+*.keystore
