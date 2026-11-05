@@ -97,7 +97,7 @@ class _SupportSheetState extends State<SupportSheet> {
   setState(()=>sending=true);
   try{
    await widget.controller.simulate(widget.item.id,amount,
-    'demo-'+DateTime.now().microsecondsSinceEpoch.toString());
+    'demo-'+DateTime.now().microsecondsSinceEpoch.toString(),isDemo:widget.item.isDemo);
    if(!mounted)return;
    await showDialog(context:context,builder:(d)=>AlertDialog(
     title:const Text('Simulazione completata'),

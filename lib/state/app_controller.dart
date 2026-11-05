@@ -63,8 +63,8 @@ class AppController extends ChangeNotifier {
  }
  Future<void> uploadDocument(int id,List<int> bytes,String fileName) async=>api.upload('/api/v1/requests/$id/documents',bytes,fileName).then((_){});
  Future<void> submitCase(int id) async=>api.post('/api/v1/requests/$id/submit',{}).then((_){});
- Future<Map<String,dynamic>> simulate(int id,int amount,String key) async {
-  if(id<0||offline)return {'amount_cents':amount,'fee_cents':serviceFeeCents(amount),
+ Future<Map<String,dynamic>> simulate(int id,int amount,String key,{bool isDemo=false}) async {
+  if(isDemo||id<0||offline)return {'amount_cents':amount,'fee_cents':serviceFeeCents(amount),
    'total_cents':totalCents(amount),'status':'demo_only','is_payment':false};
   final obj=await api.post('/api/v1/pledges',{
    'aid_request_id':id,'amount_cents':amount,'idempotency_key':key});
