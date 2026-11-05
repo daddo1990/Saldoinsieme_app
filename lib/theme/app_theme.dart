@@ -22,7 +22,7 @@ class SI {
     padding:const EdgeInsets.symmetric(horizontal:22,vertical:16),
     shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(17)),
     textStyle:GoogleFonts.dmSans(fontWeight:FontWeight.w800,fontSize:15))),
-   inputDecorationTheme:InputDecorationTheme(filled:true,fillColor:Colors.white,
+   inputDecorationTheme:InputDecorationThemeData(filled:true,fillColor:Colors.white,
     contentPadding:const EdgeInsets.all(16),
     border:OutlineInputBorder(borderRadius:BorderRadius.circular(16),borderSide:const BorderSide(color:border)),
     enabledBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(16),borderSide:const BorderSide(color:border)),
