@@ -4,6 +4,8 @@ import '../state/app_controller.dart';
 import '../theme/app_theme.dart';
 import '../widgets/ui.dart';
 import 'create_screen.dart';
+import 'balance_screen.dart';
+import 'account_settings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
  const ProfileScreen({super.key,required this.controller,required this.onCreate,required this.onLogin});
@@ -68,6 +70,29 @@ class _ProfileScreenState extends State<ProfileScreen>{
        Text(controller.email??'',style:const TextStyle(color:SI.muted,fontSize:12))
       ])),
       IconButton(onPressed:refresh,icon:const Icon(Icons.refresh_rounded,color:SI.emerald),tooltip:'Aggiorna')
+     ])),
+    const SizedBox(height:20),
+    Container(decoration:BoxDecoration(color:Colors.white,
+     borderRadius:BorderRadius.circular(20),border:Border.all(color:SI.border)),
+     child:Column(children:[
+      ListTile(
+       leading:const Icon(Icons.account_balance_wallet_outlined,color:SI.emerald),
+       title:const Text('Saldo e attività',style:TextStyle(fontWeight:FontWeight.w800,color:SI.ink)),
+       subtitle:const Text('Riepilogo reale e simulazioni, sempre separati'),
+       trailing:const Icon(Icons.chevron_right_rounded),
+       onTap:()=>Navigator.push(context,MaterialPageRoute(
+        builder:(_)=>BalanceScreen(controller:controller)))),
+      const Divider(height:1,color:SI.border,indent:58),
+      ListTile(
+       leading:const Icon(Icons.manage_accounts_rounded,color:SI.emerald),
+       title:const Text('Impostazioni account',style:TextStyle(fontWeight:FontWeight.w800,color:SI.ink)),
+       subtitle:const Text('Dati, password e cancellazione'),
+       trailing:const Icon(Icons.chevron_right_rounded),
+       onTap:()async{
+        await Navigator.push(context,MaterialPageRoute(
+         builder:(_)=>AccountSettingsScreen(controller:controller)));
+        if(mounted)refresh();
+       }),
      ])),
     const SizedBox(height:23),
     SectionTitle('Le mie richieste',trailing:'Nuova',onTrailing:widget.onCreate),

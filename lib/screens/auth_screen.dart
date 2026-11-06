@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../state/app_controller.dart';
 import '../theme/app_theme.dart';
 import '../widgets/ui.dart';
+import 'forgot_password_screen.dart';
 
 class AuthScreen extends StatefulWidget {
  const AuthScreen({super.key,required this.controller});
@@ -57,6 +58,11 @@ class _AuthScreenState extends State<AuthScreen> {
       validator:(v)=>(v?.isEmpty??true)?'Inserisci la password.':
        register&&(v!.length<10||!RegExp('[A-Z]').hasMatch(v)||!RegExp('[a-z]').hasMatch(v)||!RegExp('[0-9]').hasMatch(v))?
        'Minimo 10 caratteri, maiuscola, minuscola e numero.':null),
+     if(!register)Align(alignment:Alignment.centerRight,child:TextButton(
+      onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>
+       ForgotPasswordScreen(controller:widget.controller))),
+      child:const Text('Password dimenticata?',style:TextStyle(
+       color:SI.emerald,fontWeight:FontWeight.w800)))),
      if(register)...[
       const SizedBox(height:16),
       CheckboxListTile(value:agree,contentPadding:EdgeInsets.zero,
