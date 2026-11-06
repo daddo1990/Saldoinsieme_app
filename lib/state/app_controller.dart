@@ -45,9 +45,47 @@ class AppController extends ChangeNotifier {
   name=user['name'] as String?;email=user['email'] as String?;api.token=token;
   await _storage.write(key:'saldoinsieme_token',value:token);notifyListeners();
  }
+
+ Future<void> requestPasswordRecovery(String address) async {
+  await api.post('/api/v1/auth/forgot-password',{'email':address.trim()});
+ }
+ Future<void> updateProfile({required String newName,String? newEmail,String? currentPassword}) async {
+  final result=await api.patch('/api/v1/me',{
+   'name':newName.trim(),
+   if(newEmail!=null)'email':newEmail.trim(),
+   if(currentPassword!=null&&currentPassword.isNotEmpty)'current_password':currentPassword,
+  });
+  if(result['relogin_required']==true){
+   await clearLocalSession();
+  }else{
+   final user=result['user'] as Map<String,dynamic>?;
+   name=user?['name'] as String? ?? newName.trim();
+   email=user?['email'] as String? ?? email;
+   notifyListeners();
+  }
+ }
+ Future<void> changePassword(String oldPassword,String newPassword) async {
+  await api.put('/api/v1/me/password',{
+   'current_password':oldPassword,'password':newPassword,
+   'password_confirmation':newPassword,
+  });
+  await clearLocalSession();
+ }
+ Future<void> deleteAccount(String currentPassword) async {
+  final result=await api.delete('/api/v1/me',{'password':currentPassword,'confirmation':'ELIMINA'});
+  if(result['deleted']!=true)throw const ApiException('Eliminazione non confermata dal server.');
+  await clearLocalSession();
+ }
+ Future<Map<String,dynamic>> accountBalance() async {
+  return api.get('/api/v1/me/balance');
+ }
+ Future<void> clearLocalSession() async {
+  await _storage.delete(key:'saldoinsieme_token');
+  token=null;name=null;email=null;api.token=null;notifyListeners();
+ }
  Future<void> logout() async {
   try{if(isLoggedIn)await api.post('/api/v1/auth/logout',{});}catch(_){}
-  await _storage.delete(key:'saldoinsieme_token');token=null;name=null;email=null;api.token=null;notifyListeners();
+  await clearLocalSession();
  }
  Future<List<AidCase>> myRequests() async {
   final obj=await api.get('/api/v1/my/requests');

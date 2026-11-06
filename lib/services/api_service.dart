@@ -20,6 +20,19 @@ class ApiService {
   try {return parse(await _client.post(url(path),headers:headers,body:jsonEncode(body)).timeout(const Duration(seconds:18)));}
   on ApiException{rethrow;}catch(_){throw const ApiException('Impossibile contattare il server.');}
  }
+
+ Future<Map<String,dynamic>> patch(String path,Map<String,dynamic> body) async {
+  try {return parse(await _client.patch(url(path),headers:headers,body:jsonEncode(body)).timeout(const Duration(seconds:18)));}
+  on ApiException{rethrow;}catch(_){throw const ApiException('Impossibile contattare il server.');}
+ }
+ Future<Map<String,dynamic>> put(String path,Map<String,dynamic> body) async {
+  try {return parse(await _client.put(url(path),headers:headers,body:jsonEncode(body)).timeout(const Duration(seconds:18)));}
+  on ApiException{rethrow;}catch(_){throw const ApiException('Impossibile contattare il server.');}
+ }
+ Future<Map<String,dynamic>> delete(String path,Map<String,dynamic> body) async {
+  try {return parse(await _client.delete(url(path),headers:headers,body:jsonEncode(body)).timeout(const Duration(seconds:18)));}
+  on ApiException{rethrow;}catch(_){throw const ApiException('Impossibile contattare il server.');}
+ }
  Future<Map<String,dynamic>> upload(String path,List<int> bytes,String name) async {
   try {
    final req=http.MultipartRequest('POST',url(path));req.headers['Accept']='application/json';
