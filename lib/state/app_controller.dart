@@ -10,12 +10,13 @@ class AppController extends ChangeNotifier {
  List<AidCase> cases=AidCase.examples;
  bool offline=true,busy=false,started=false;
  String? token,name,email;
+ bool emailVerified=false;
  bool get isLoggedIn=>token?.isNotEmpty==true;
  Future<void> start() async {
   try {
    token=await _storage.read(key:'saldoinsieme_token');api.token=token;
    if(isLoggedIn){
-    try{final me=await api.get('/api/v1/me');name=me['name'] as String?;email=me['email'] as String?;}
+    try{final me=await api.get('/api/v1/me');name=me['name'] as String?;email=me['email'] as String?;emailVerified=me['email_verified']==true;}
     on ApiException catch(e){if(e.statusCode==401)await logout();}
    }
   }catch(_){token=null;api.token=null;}
@@ -43,9 +44,18 @@ class AppController extends ChangeNotifier {
  Future<void> _saveSession(Map<String,dynamic> obj) async {
   token=obj['token'] as String?;final user=Map<String,dynamic>.from(obj['user'] as Map);
   name=user['name'] as String?;email=user['email'] as String?;api.token=token;
+  emailVerified=false;
   await _storage.write(key:'saldoinsieme_token',value:token);notifyListeners();
  }
 
+ Future<void> refreshVerificationStatus() async {
+  if(!isLoggedIn)return;
+  final me=await api.get('/api/v1/me');
+  emailVerified=me['email_verified']==true;notifyListeners();
+ }
+ Future<void> requestEmailVerification() async {
+  await api.post('/api/v1/auth/email/verification-notification',{});
+ }
  Future<void> requestPasswordRecovery(String address) async {
   await api.post('/api/v1/auth/forgot-password',{'email':address.trim()});
  }
@@ -81,7 +91,7 @@ class AppController extends ChangeNotifier {
  }
  Future<void> clearLocalSession() async {
   await _storage.delete(key:'saldoinsieme_token');
-  token=null;name=null;email=null;api.token=null;notifyListeners();
+  token=null;name=null;email=null;emailVerified=false;api.token=null;notifyListeners();
  }
  Future<void> logout() async {
   try{if(isLoggedIn)await api.post('/api/v1/auth/logout',{});}catch(_){}
