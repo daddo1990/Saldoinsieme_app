@@ -1,0 +1,5 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- DEVELOPMENT ONLY: allow http://10.0.2.2 for local Laravel. Do not enable in release. -->
+    <application android:usesCleartextTraffic="true" />
+</manifest>
