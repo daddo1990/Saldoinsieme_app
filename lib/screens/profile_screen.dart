@@ -71,6 +71,25 @@ class _ProfileScreenState extends State<ProfileScreen>{
       ])),
       IconButton(onPressed:refresh,icon:const Icon(Icons.refresh_rounded,color:SI.emerald),tooltip:'Aggiorna')
      ])),
+    const SizedBox(height:12),
+    if(!controller.emailVerified)Container(
+     padding:const EdgeInsets.all(15),
+     decoration:BoxDecoration(color:SI.mint.withValues(alpha:0.35),borderRadius:BorderRadius.circular(16)),
+     child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      const Text('Verifica la tua email',style:TextStyle(fontWeight:FontWeight.w800,color:SI.forest)),
+      const SizedBox(height:5),
+      const Text('Ti invieremo un link valido 60 minuti. In locale lo trovi nel log Laravel.',style:TextStyle(fontSize:12,color:SI.ink)),
+      Wrap(spacing:8,children:[
+       TextButton(onPressed:()async{
+        try{await controller.requestEmailVerification();if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content:Text('Link di verifica richiesto. Controlla la posta.')));}
+        catch(e){if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(e.toString())));}
+       },child:const Text('Invia link')),
+       TextButton(onPressed:()async{
+        try{await controller.refreshVerificationStatus();}
+        catch(e){if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(e.toString())));}
+       },child:const Text('Ho verificato')),
+      ])
+     ])),
     const SizedBox(height:20),
     Container(decoration:BoxDecoration(color:Colors.white,
      borderRadius:BorderRadius.circular(20),border:Border.all(color:SI.border)),
